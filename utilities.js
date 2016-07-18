@@ -42,14 +42,23 @@
       },
 
       findWhere: function(query) {
-        var query_keys = Object.keys(query);
-        for (var i = 0; i < element.length; i++) {
-          var obj = element[i];
-          var all_match = query_keys.every(function(key) {
-            return query[key] === obj[key];
-          });
-          if (all_match) { return obj; }
-        }
+        var match;
+
+        element.some(function(obj) {
+          var all_match = true;
+
+          for (var prop in query) {
+            if (!(prop in obj) || obj[prop] !== query[prop] ) {
+              all_match = false;
+            }
+          }
+
+          if (all_match) {
+            match = obj;
+            return true;
+          }
+        });
+        return match;
       },
 
       where: function(query) {
@@ -107,37 +116,7 @@
 
       has: function(prop) {
         return {}.hasOwnProperty.call(element, prop);
-        // return Object.keys(element).includes(prop);
       },
-
-      // isElement: function() {
-      //   return element instanceof HTMLElement;
-      // },
-
-      // isArray: function() {
-      //   return element instanceof Array;
-      // },
-
-      // isObject: function() {
-      //   return element instanceof Object;
-      // },
-
-      // isFunction: function() {
-      //   return element instanceof Function;
-      // },
-
-      // isBoolean: function() {
-      //   return (typeof element) === "boolean" || element instanceof Boolean;
-      // },
-
-      // isString: function() {
-      //   return (typeof element) == "string" || element instanceof String;
-      // },
-
-      // isNumber: function() {
-      //   return (typeof element) == 'number' || element instanceof Number;
-      // }
-
     };
 
     (["isElement", "isArray", "isObject", "isFunction", "isBoolean", "isString", "isNumber"]).forEach(function(method) {
